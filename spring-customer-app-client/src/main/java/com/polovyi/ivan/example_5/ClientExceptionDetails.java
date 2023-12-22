@@ -1,4 +1,4 @@
-package com.polovyi.ivan.example_7;
+package com.polovyi.ivan.example_5;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

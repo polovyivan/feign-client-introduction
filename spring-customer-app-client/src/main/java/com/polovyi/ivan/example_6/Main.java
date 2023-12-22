@@ -9,6 +9,7 @@ import com.polovyi.ivan.dto.CreateCustomerRequest;
 import feign.Feign;
 import feign.Logger.Level;
 import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import feign.slf4j.Slf4jLogger;
 
 public class Main {
@@ -20,15 +21,19 @@ public class Main {
             .setSerializationInclusion(Include.NON_NULL);
 
     public static void main(String[] args) {
-        CustomerAppClientExample6 clientWithLogs = Feign.builder()
+        CustomerAppClientExample6 client = Feign.builder()
                 .requestInterceptor(new AuthorizationInterceptor())
                 .logLevel(Level.FULL)
                 .logger(new Slf4jLogger())
-                .decoder(new JacksonDecoder(OBJECT_MAPPER))
                 .decoder(new CustomDecoder(new JacksonDecoder(OBJECT_MAPPER)))
+                .encoder(new JacksonEncoder(OBJECT_MAPPER))
                 .errorDecoder(new CustomErrorDecoder(OBJECT_MAPPER))
                 .target(CustomerAppClientExample6.class,
                         "http://localhost:8001/spring-customer-app");
-        clientWithLogs.createCustomer(new CreateCustomerRequest(null, "17737278341", "address"));
+
+        String testResponse = client.test();
+        System.out.println("testResponse = " + testResponse);
+        client.createCustomerWithValidation(new CreateCustomerRequest("fullName", "17737278341", "address"));
+        client.createCustomerWithValidation(new CreateCustomerRequest(null, "17737278341", "address"));
     }
 }

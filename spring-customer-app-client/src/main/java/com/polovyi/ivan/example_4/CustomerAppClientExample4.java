@@ -8,6 +8,10 @@ import java.util.List;
 
 public interface CustomerAppClientExample4 {
 
+    @RequestLine("GET /test")
+    String test();
+    @RequestLine("GET /test-secured")
+    String testSecured();
     @RequestLine("GET /customers")
     List<CustomerResponse> getCustomers();
 
