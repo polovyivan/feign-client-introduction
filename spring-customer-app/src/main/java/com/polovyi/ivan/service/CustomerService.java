@@ -7,26 +7,25 @@ import com.polovyi.ivan.dto.UpdateCustomerRequest;
 import com.polovyi.ivan.entity.CustomerEntity;
 import com.polovyi.ivan.repository.CustomerRepository;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public record CustomerService(CustomerRepository customerRepository) {
+@RequiredArgsConstructor
+public class CustomerService {
 
-    public List<CustomerResponse> getAllCustomers() {
-        log.info("Getting all customers...");
-        return customerRepository.findAll().stream().map(CustomerResponse::valueOf).collect(Collectors.toList());
-    }
+    private final CustomerRepository customerRepository;
 
     public List<CustomerResponse> getCustomersWithFilters(String fullName, String phoneNumber,
             LocalDate createdAt) {
-        log.info("Getting all customers with filters fullName {}, phoneNumber {}, createdAt {} ...", fullName, phoneNumber, createdAt);
+        log.info("Getting all customers with filters fullName {}, phoneNumber {}, createdAt {} ...", fullName, phoneNumber,
+                createdAt);
         return customerRepository.findCustomersWithFilters(fullName, phoneNumber, createdAt)
                 .stream()
                 .map(CustomerResponse::valueOf)
